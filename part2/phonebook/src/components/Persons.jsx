@@ -8,8 +8,8 @@ const Persons = ({ persons, setPersons, filter }) => {
   return (
     <div>
       {
-        filtered.map(person => 
-          <Person key={person.id} person={person} />
+        filtered.map(person =>          
+          <Person key={person.id} person={person} setPersons={setPersons} />
         )
       }
     </div>

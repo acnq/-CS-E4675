@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+import PersonsService from './services/person'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,10 +12,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    PersonsService
+      .getAll()
+      .then(initials => {
+        setPersons(initials)
       })
   }, [])
 
@@ -33,17 +33,38 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const person = persons.find(p => p.name === newName)
+        const changedPerson = { ... person, number: newNumber }
+        PersonsService
+          .update(person.id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
+            setNewName('')
+            setNewName('')
+          })
+          .catch(() => {
+            alert(
+              `${person.name} has been removed`
+            )
+            setPersons(persons.filter(p => p.id !== person.id))
+          })
+      }
+      return
     }
     const PersonObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
 
-    setPersons(persons.concat(PersonObject))
-    setNewName('')
-    setNewNumber('')
+    PersonsService
+      .create(PersonObject)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+        alert(`${response.name} is Added to the phonebook`)
+      })
   }
   return (
     <div>
