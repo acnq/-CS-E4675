@@ -1,6 +1,15 @@
-const Person = ({ person }) => {
+import PersonsService from '../services/person'
+
+const Person = ({ person, setPersons }) => {
   return (
-    <p>{person.name} {person.number}</p>
+    <p key={person.id}>{person.name} {person.number}
+      <button onClick={() => {
+        if (window.confirm(`Delete ${person.name}?`)) {
+          PersonsService.deletePerson(person.id)
+          setPersons(persons.filter(p => p.id !== person.id))
+        }
+      }}>delete</button>
+    </p>
   )
 }
 
