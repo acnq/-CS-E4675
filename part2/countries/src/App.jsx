@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import process from 'process'
 
 const Filter = ({ filter, handleFilterChange }) => 
   <p>
@@ -7,6 +8,16 @@ const Filter = ({ filter, handleFilterChange }) =>
   </p>
 
 const Country =({ country }) => {
+  const [weather, setweather] = useState({})
+  const api_key = import.meta.env.VITE_SOME_KEY
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${api_key}`
+  useEffect(() => {
+    axios
+      .get(url)
+      .then(response => {
+        setweather(response.data)
+      })
+  }, [url])
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -17,7 +28,10 @@ const Country =({ country }) => {
         {Object.values(country.languages).map(language => <li key={language}>{language}</li>)}
       </ul>
       <img src={country.flags.png} />
-      
+      <h3>Weather in {country.capital}</h3>
+      <p>temperature: {(weather.main?.temp - 273.15).toFixed(2)} Celcius</p>
+      <img src={`https://openweathermap.org/img/wn/${weather.weather?.find(() => true).icon}@2x.png`} />
+      <p>wind:{weather.wind?.speed} m/s</p>
     </div>
   )
 }
