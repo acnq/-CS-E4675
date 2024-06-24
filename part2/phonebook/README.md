@@ -8,3 +8,5 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 in terminal, run `npm run server` first, and open another terminal,  start the vite with `npm run dev` (or `npx vite --port=4000`)
+
+refresh is needed if you want to render the result of deletion

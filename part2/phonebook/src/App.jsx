@@ -14,6 +14,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     PersonsService
@@ -54,9 +55,12 @@ const App = () => {
             }, 5000)
           })
           .catch(() => {
-            alert(
+            setErrorMessage(
               `${person.name} has been removed`
             )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
             setPersons(persons.filter(p => p.id !== person.id))
           })
       }
@@ -73,6 +77,7 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName('')
         setNewNumber('')
+        setErrorMessage(null)
         setMessage(
           `Added ${response.name}`
         )
@@ -84,7 +89,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} errorMessage={errorMessage}/>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <PersonForm 
         newName={newName} 
