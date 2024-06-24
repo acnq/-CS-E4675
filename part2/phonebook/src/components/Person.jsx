@@ -7,6 +7,7 @@ const Person = ({ person, setPersons }) => {
         if (window.confirm(`Delete ${person.name}?`)) {
           PersonsService.deletePerson(person.id)
           setPersons(persons.filter(p => p.id !== person.id))
+          console.log(`setPersons ${persons}`)
         }
       }}>delete</button>
     </p>
