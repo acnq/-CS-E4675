@@ -92,6 +92,42 @@ test('missing author or url goes to bad request', async () => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
+test('deletion of a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  assert(!titles.includes(blogToDelete.title))
+})
+
+test('update a blog', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  let blogToUpdate = blogsAtStart[0]
+
+  const newBlog = {
+    ...blogToUpdate,
+    title: 'updated blog',
+  }
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(titles.includes('updated blog'))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
