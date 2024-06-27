@@ -11,15 +11,3 @@ Content-Type: application/json
   "url": "http://sample.com/url",
   "likes": 0
 }
-
-###
-POST  http://localhost:3001/api/notes/ HTTP/1.1
-Content-Type: application/json
-
-{
-  "name": "sample",
-  "time": "Wed, 21 Oct 2015 18:27:50 GMT"
-}
-
-###
-GET http://localhost:3001/api2/notes/ HTTP/1.1
