@@ -1,0 +1,51 @@
+### post hellas
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "hellas",
+  "name": "Arto Hellas",
+  "password": "hellaspswd"
+}
+
+### post mluukkai
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "name": "Matti Luukkainen",
+  "password": "mluukkaipswd"
+}
+
+### add root user
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "root",
+  "name": "Superuser",
+  "password": "sekret"
+}
+
+
+### bad post: shorter username than expected
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type : application/json
+
+{
+  "username": "xy",
+  "name": "xx",
+  "password": "1234"
+}
+
+
+### bad post: shorter pswd than expected
+POST http://localhost:3001/api/users HTTP/1.1
+Content-Type : application/json
+
+{
+  "username": "xxyz",
+  "name": "xx",
+  "password": "12"
+}

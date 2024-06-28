@@ -2,13 +2,23 @@ const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const helper = require('./tesst_helper')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const app = require('../app')
 
 const api = supertest(app)
 
 beforeEach(async () => {
+  // hanlde user schema
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'root', passwordHash })
+  await user.save()
+
+  // handle blog schema
   await Blog.deleteMany({})
 
   const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
@@ -37,6 +47,16 @@ test('the identifier is named id', async () => {
 })
 
 test('the addition of a new blog', async () => {
+  // get token
+  const loginInfo = {
+    username: 'root',
+    password: 'sekret'
+  }
+  const response = await api
+    .post('/api/login')
+    .send(loginInfo)
+  const token = 'Bearer ' + response.body.token.toString()
+  console.log(token)
   const newBlog = {
     title: 'Title',
     author: 'Author',
@@ -46,6 +66,7 @@ test('the addition of a new blog', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', token)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -57,6 +78,17 @@ test('the addition of a new blog', async () => {
 })
 
 test('default of likes is 0', async () => {
+  // get token
+  const loginInfo = {
+    username: 'root',
+    password: 'sekret'
+  }
+  const response = await api
+    .post('/api/login')
+    .send(loginInfo)
+  const token = 'Bearer ' + response.body.token.toString()
+  console.log(token)
+
   const newBlog = {
     title: 'Default Likes',
     author: 'Author',
@@ -65,6 +97,7 @@ test('default of likes is 0', async () => {
 
   await api
     .post('/api/blogs')
+    .set('Authorization', token)
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
@@ -78,13 +111,43 @@ test('default of likes is 0', async () => {
   })
 })
 
+test('Invalid token POST', async () => {
+
+  const newBlog = {
+    title: 'Default Likes',
+    author: 'Author',
+    url: 'http://sample.com/url',
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', '')
+    .send(newBlog)
+    .expect(401)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
 test('missing author or url goes to bad request', async () => {
+  // get token
+  const loginInfo = {
+    username: 'root',
+    password: 'sekret'
+  }
+  const response = await api
+    .post('/api/login')
+    .send(loginInfo)
+  const token = 'Bearer ' + response.body.token.toString()
+  console.log(token)
+
   const newBlog = {
     title: 'Missing Author or URL',
   }
 
   await api
     .post('/api/blogs')
+    .set('Authorization', token)
     .send(newBlog)
     .expect(400)
 
@@ -93,16 +156,43 @@ test('missing author or url goes to bad request', async () => {
 })
 
 test('deletion of a blog', async () => {
-  const blogsAtStart = await helper.blogsInDb()
-  const blogToDelete = blogsAtStart[0]
+  // first login
+  // get token
+  const loginInfo = {
+    username: 'root',
+    password: 'sekret'
+  }
+  const response = await api
+    .post('/api/login')
+    .send(loginInfo)
+  const token = 'Bearer ' + response.body.token.toString()
+  console.log(token)
+  // and add a blog
+  const newBlog = {
+    title: 'Title2',
+    author: 'Author',
+    url: 'http://sample.com/url',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', token)
+    .send(newBlog)
+    .expect(201)
+
+  const blogsAtSart = await helper.blogsInDb()
+  const blogsNeedToDelete = blogsAtSart.filter(b => b.title === 'Title2')
+  const blogToDelete = blogsNeedToDelete[0]
+  console.log(blogToDelete)
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization', token)
     .expect(204)
 
   const blogsAtEnd = await helper.blogsInDb()
-
-  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  assert.strictEqual(blogsAtEnd.length, blogsAtSart.length - 1)
 
   const titles = blogsAtEnd.map(r => r.title)
   assert(!titles.includes(blogToDelete.title))
