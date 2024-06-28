@@ -42,7 +42,7 @@ const Blog = ({ blog, user, setUpdate, remove }) => {
         {blog.user?.username} <br/>
         <button onClick={remove} style={hideRemove}>remove</button>
       </div>
-    </div>  
+    </div>
   )
 }
 
