@@ -22,7 +22,7 @@ export default [
         2
       ],
       '@stylistic/js/linebreak-style': [
-        'error',
+        'warning',
         'windows'
       ],
       '@stylistic/js/quotes': [
