@@ -1,0 +1,42 @@
+### GET ALL
+GET http://localhost:3001/api/blogs
+
+### POST with user
+POST  http://localhost:3001/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjY3ZGQ1NmVkY2NjYjMyYTgzMjIzZDMyIiwiaWF0IjoxNzE5NTMxMDkwfQ.KByw6-mjVdx-5a39QOC16aoXBuywdJBjP0ewIQfArD0
+
+{
+  "title": "Title_auth2",
+  "author": "Author",
+  "url": "http://sample.com/url",
+  "likes": 0
+}
+
+### post with super user
+POST  http://localhost:3001/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2N2RmY2U4YjIzMjUzYTkwMmYxNTVkNSIsImlhdCI6MTcxOTUzMjc4NX0.4igDVHcgScSkVO19RKPaRiDxX92j7hWSqyJvCn3cB08
+
+{
+  "title": "Title_auth9",
+  "author": "Author",
+  "url": "http://sample.com/url",
+  "likes": 0
+}
+### POST with unauthorized user
+POST  http://localhost:3001/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjY3ZGQ1NmVkY2NjYjMyYTgzMjIzZDMyIiwiaWF0I
+
+{
+  "title": "Title_auth",
+  "author": "Author",
+  "url": "http://sample.com/url",
+  "likes": 0
+}
+
+### DELETE the uploaded blog
+DELETE http://localhost:3001/api/blogs/667dfdc9d3d958132d7648e5 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY2N2RmY2U4YjIzMjUzYTkwMmYxNTVkNSIsImlhdCI6MTcxOTUzMjc4NX0.4igDVHcgScSkVO19RKPaRiDxX92j7hWSqyJvCn3cB08
