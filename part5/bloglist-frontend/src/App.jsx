@@ -4,7 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import BlogFrom from './components/BlogForm' 
+import BlogFrom from './components/BlogForm'
 
 //"username": root,
 //"password": sekret
@@ -22,7 +22,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       setBlogs( blogs )
       console.log(update)
-    })  
+    })
   }, [update]) //used for keep user visibe
   // not know exactly why.
   useEffect(() => {
@@ -39,9 +39,9 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
-    
+
     try {
-        const user = await loginService.login({
+      const user = await loginService.login({
         username, password
       })
 
@@ -100,11 +100,11 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       })
-  } 
+  }
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
   const remove = async (id) => {
     const blog = blogs.find(n => n.id === id)
-    console.log("id:", id, "blog: ", blog)
+    console.log('id:', id, 'blog: ', blog)
     if (window.confirm(`remove blog ${blog.title} by  ${blog.author}`)) {
       console.log(user)
       blogService.setToken(user.token)
@@ -121,7 +121,6 @@ const App = () => {
           setErrorMessage(null)
         }, 5000)
       }
-      
     }
   }
 
