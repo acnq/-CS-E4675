@@ -1,0 +1,26 @@
+### right login info
+POST http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "hellas",
+  "password": "hellaspswd"
+}
+
+### login root user
+POST http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "sekret"
+}
+
+### wrong login info
+POST http://localhost:3001/api/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "wrongpswd"
+}
