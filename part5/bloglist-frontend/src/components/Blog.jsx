@@ -32,15 +32,15 @@ const Blog = ({ blog, user, like, remove }) => {
     <div style={blogStyle}>
       <div className='blog'>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility} style={hideWhenVisible}>view</button>
+        <button className='view-btn' onClick={toggleVisibility} style={hideWhenVisible}>view</button>
         <button onClick={toggleVisibility} style={showWhenVisible}>hide</button>
       </div>
       <div className='fullblog' style={showWhenVisible} id='fullblog'>
         <a href={`${blog.url}`} >{blog.url}</a> <br/>
         <p>likes {blog.likes}</p>
-        <button onClick={like}>like</button> <br/>
+        <button className='like-btn' id="like" onClick={like}>like</button> <br/>
         {blog.user?.username} <br/>
-        <button onClick={remove} style={hideRemove}>remove</button>
+        <button id="remove" onClick={remove} style={hideRemove}>remove</button>
       </div>
     </div>
   )

@@ -1,0 +1,17 @@
+{
+  "name": "bloglist-e2etest-cypress",
+  "version": "1.0.0",
+  "description": "use cypress e2e, since LTS(Longer time supported)",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ACNQ",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^13.12.0",
+    "eslint-plugin-cypress": "^3.3.0"
+  }
+}
