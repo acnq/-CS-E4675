@@ -101,6 +101,14 @@ const App = () => {
         }, 5000)
       })
   }
+  const like = async (blog) => {
+    event.preventDefault()
+    const likes = blog.likes + 1
+    const newBlog = { ...blog, likes }
+    await blogService.update(blog.id, newBlog)
+    setUpdate(Math.floor(Math.random() * 100))
+  }
+
   const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
   const remove = async (id) => {
     const blog = blogs.find(n => n.id === id)
@@ -163,7 +171,7 @@ const App = () => {
         <BlogFrom createBlog={createBlog}></BlogFrom>
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} setUpdate={setUpdate} user={user.username} remove={() => remove(blog.id)}/>
+        <Blog key={blog.id} blog={blog} like={() => like(blog, event)} user={user.username} remove={() => remove(blog.id)}/>
       )}
     </div>
   )
